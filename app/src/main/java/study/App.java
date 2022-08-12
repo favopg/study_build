@@ -3,15 +3,35 @@
  */
 package study;
 
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ConfigurableApplicationContext;
+
+import study.dao.IntroduceEntity;
+import study.repository.Introduce;
+
+/**
+ * アプリケーションメインクラス実行
+ * @author イッシー
+ *
+ */
+@SpringBootApplication
 public class App {
+			
     public String getGreeting() {
+    	//System.out.println(introduce.count() + "件");
         return "Hello World!";
     }
 
     public static void main(String[] args) {
+    	ConfigurableApplicationContext context = SpringApplication.run(App.class, args);
         System.out.println(new App().getGreeting());
-    }
+        IntroduceEntity entity = new IntroduceEntity();
+    	Introduce introduce = context.getBean(Introduce.class);
+    	System.out.println(introduce.count() + "件");
 
+    }
+    
     public int tasizan(int param1, int param2) {
         return param1 + param2;
     }
