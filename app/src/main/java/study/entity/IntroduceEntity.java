@@ -1,9 +1,20 @@
 package study.entity;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 自己紹介エンティティクラス
@@ -12,49 +23,33 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "introduce")
-public class IntroduceEntity {
+@Getter
+@Setter
+@EntityListeners(AuditingEntityListener.class)
+public class IntroduceEntity extends CommonEntity{
 	
 	@Id
 	@Column(name = "id")
-	private int id = 0;
-	@Column(name = "name")
-	private String name = null;
-	@Column(name = "job")
-	private String job = null;
-	@Column(name = "language")
-	private String language = null;
-	@Column(name = "one_thing")
-	private String oneThing = null;
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private int id;
+			
+	@Column(name = "job", length = 50)
+	private String job;
 	
-	public int getId() {
-		return id;
-	}
-	public void setId(int id) {
-		this.id = id;
-	}
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
-	public String getJob() {
-		return job;
-	}
-	public void setJob(String job) {
-		this.job = job;
-	}
-	public String getLanguage() {
-		return language;
-	}
-	public void setLanguage(String language) {
-		this.language = language;
-	}
-	public String getOneThing() {
-		return oneThing;
-	}
-	public void setOneThing(String oneThing) {
-		this.oneThing = oneThing;
-	}
-
+	@Column(name = "my_field")	
+	private String myField;
+	
+	@Column(name = "one_message")
+	private String oneMessage;
+	
+	@Column(name = "language")
+	private String language;
+	
+	@Column(name= "icon")
+	private String icon;
+		
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "user_id", referencedColumnName = "id", insertable = true, updatable = false)
+	private UserEntity userEntity;
+		
 }
