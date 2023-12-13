@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<title>自己紹介変更画面</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+</head>
+<body>
+	<nav th:replace="common/layout :: nav"></nav>
+	<script th:replace="common/layout :: sendLogout"></script>
+	
+  	  	
+  	<div class="container mt-5">
+    	<div class="row justify-content-center">
+        	<div class="col-md-6">
+            	<div class="card">
+                	<div class="card-header">
+                    	<h4 class="mb-0">自己紹介変更</h4>
+                	</div>
+                	<div class="card-body">
+                    	<form th:action="@{/introduce/update}" th:object="${updateRequestForm}" th:method="post" enctype="multipart/form-data">
+                        	<div class="form-group mb-1">
+                            	<label for="name" th:text="'ユーザ名：'+${authentication.name}"></label>
+                        	</div>
+
+                        	<div class="form-group mb-1">
+                        		<label for="fileInput">アイコン画像アップロード</label>
+            					<div class="custom-file">
+                					<input type="file" class="custom-file-input" id="fileInput" th:name="icon">
+            					</div>
+                        	</div>
+
+                        	<div class="form-group mb-1">
+                        	    <label for="exampleTextarea">一言メッセージ</label>
+        						<textarea class="form-control" th:field="${updateRequestForm.oneMessage}" id="exampleTextarea" rows="3"></textarea>
+        						<div class="text-danger" th:errors="${updateRequestForm.oneMessage}">メッセージ教えて</div>
+                        	</div>
+                        	
+                        	<div class="form-group mb-1">
+                        	    <label for="job">仕事</label>
+            					<input type="text" class="form-control" th:field="${updateRequestForm.job}" id="job" placeholder="現在の仕事を教えてください">
+            					<div class="text-danger" th:errors="${updateRequestForm.job}">仕事教えてよ</div>
+                        	</div>
+                        	
+                        	<div class="form-group mb-1">
+                        		<label for="my_field">専門分野</label>
+        						<select class="form-control"  th:field="${updateRequestForm.myField}" id="my_field">
+            						<option 
+            							th:each="myField : ${myFields}"
+                    					th:value="${myField}"
+                    					th:text="${myField}"
+                    			        th:selected="${myField eq updateRequestForm.myField}">
+                					</option>
+        						</select>
+        						<div class="text-danger" th:errors="${updateRequestForm.myField}">専門分野教えて</div>
+                        	</div>
+                        	
+                        	<div class="form-group mb-2">
+                        	    <label for="language">プログラミング言語</label>
+            					<input type="text" class="form-control" th:field="${updateRequestForm.language}" id="language" placeholder="よく使用する言語を教えてください">
+            					<div class="text-danger" th:errors="${updateRequestForm.language}">得意言語教えて</div>
+                        	</div>
+                        	
+                        	<button type="submit" class="btn btn-primary">変更</button>
+                    	</form>
+                	</div>
+            	</div>
+        	</div>
+    	</div>
+	</div>
+</body>
+</html>

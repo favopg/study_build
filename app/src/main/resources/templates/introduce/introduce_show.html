@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<title>自己紹介トップページ</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+</head>
+<body>
+	<nav th:replace="common/layout :: nav"></nav>
+	<script th:replace="common/layout :: sendLogout"></script>
+
+<!-- ここからコンテンツ  -->
+	<div class="text-center">
+  		<div class="fw-bold">自己紹介一覧</div>
+  	</div>
+<div class="container">
+  <div class="row">  
+  	<div class="col-4" th:each="introduceInfo:${introduces}">
+   		<div class="card" style="width: 18rem;">
+  			<img th:attr="src=${'/img/' + introduceInfo.icon}" class="card-img-top img-thumbnail" style="width: 100px; height: 100px;" alt="アイコン">   			
+  			<div class="card-body">
+    			<h5 class="card-title"><span th:text="${introduceInfo.userEntity.name}+'の自己紹介'"></span></h5>
+    			<p class="card-text" th:text="${introduceInfo.oneMessage}"></p>
+  			</div>
+  			
+  			<ul class="list-group list-group-flush">
+    			<li class="list-group-item" th:text="${introduceInfo.job}"></li>
+    			<li class="list-group-item" th:text="${introduceInfo.myField}"></li>
+    			<li class="list-group-item" th:text="${introduceInfo.language}"></li>
+  			</ul>
+  			<div class="card-body" th:if="${authentication.principal.username == introduceInfo.userEntity.name}">
+  			    <a th:href="@{/introduce/edit/screen}" class="card-link">編集</a>
+	  		</div>
+	   </div>
+    </div>    
+    <!-- ループここまで  -->
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script>
+$(document).ready(function() {
+	/**
+    $("#inputText").on("input", function() {
+    	// キーワード検索入力時に非同期通信
+        var inputValue = $(this).val();        
+        $.ajax({
+            url: '/top2',
+            method: 'GET',
+            success: function(response) {
+                console.log(response);
+            },
+            error: function(error) {
+                console.error(error);
+            }
+        });
+    });
+	*/
+});
+</script>
+</body>
+</html>
