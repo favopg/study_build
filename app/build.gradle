@@ -12,8 +12,10 @@ plugins {
 
     // Apply the application plugin to add support for building a CLI application in Java.
     id 'application'
-    id 'org.flywaydb.flyway' version '7.0.0'
-
+    id 'org.springframework.boot' version '2.7.17'
+    //id 'org.springframework.boot' version '3.1.5'
+    
+    id 'io.spring.dependency-management' version '1.0.10.RELEASE'
 }
 
 repositories {
@@ -27,15 +29,26 @@ dependencies {
 
     // Use the awesome Spock testing and specification framework even with Java
     testImplementation 'org.spockframework:spock-core:2.1-groovy-3.0'
-    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.5.2'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.24'
+    annotationProcessor "org.projectlombok:lombok:1.18.24"
+
 
     // This dependency is used by the application.
     implementation 'com.google.guava:guava:31.0.1-jre'
-    implementation group:'org.flywaydb', name:'flyway-core' , version: '7.0.0'
-    implementation group:'mysql', name: 'mysql-connector-java', version: '8.0.21'
+    implementation group:'mysql', name: 'mysql-connector-java', version: '8.0.23'
     implementation group:'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version:'2.7.2'
     implementation group: 'javax.persistence', name: 'javax.persistence-api', version: '2.2'
     implementation group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.1'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: '3.2.0'    
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '2.7.17'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-thymeleaf', version: '2.7.17'
+    implementation group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '2.53.1'
+    implementation group: 'io.springfox', name: 'springfox-boot-starter', version: '3.0.0'
+	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-validation', version: '2.7.17'
+    
 }
 
 application {
@@ -47,14 +60,4 @@ tasks.named('test') {
     // Use JUnit Platform for unit tests.
     useJUnitPlatform()
 
-}
-
-flyway {
-    url='jdbc:mysql://localhost:3306/household?serverTimezone=UTC'
-    user='sample'
-    password='sample'
-}
-
-tasks.withType(JavaCompile) {
-	options.encoding = 'UTF-8'
 }
