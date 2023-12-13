@@ -32,5 +32,8 @@ spring.security.user.password=sample
 webdriver.chrome.driver=/Users/favor/build_study/app/src/main/resources/driver/chromedriver
 spring.mvc.pathmatch.matching-strategy = ANT_PATH_MATCHER
 
-#ローカルしか動かないので見直す日超あり
+#ローカルしか動かないので見直す必要あり
 upload.directory=src/main/resources/static/img
+
+#ログ出力 ローカルしか動かないので見直す必要あり
+logging.file.name=src/main/resources/log/introduce/log
