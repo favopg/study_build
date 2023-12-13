@@ -1,0 +1,13 @@
+# Ignore Gradle project-specific cache directory
+.gradle
+.temp-*
+.project
+.settings/
+.gitattributes
+app/.classpath
+app/bin/
+app/src/main/resources/application.properties
+app/src/main/resources/static/
+app/build
+app/src/main/resources/driver/
+app/src/main/webapp/
