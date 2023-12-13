@@ -3,12 +3,13 @@
  */
 package study;
 
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
-
-import study.entity.IntroduceEntity;
-import study.repository.Introduce;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
 /**
  * アプリケーションメインクラス実行
@@ -16,23 +17,76 @@ import study.repository.Introduce;
  *
  */
 @SpringBootApplication
-public class App {
-			
+public class App{
+
+	@Autowired
+	RestTemplate restTemplate;
+	
+	/**
+	 * 世界おなじみのハローワールド
+	 * @return
+	 */
     public String getGreeting() {
-    	//System.out.println(introduce.count() + "件");
         return "Hello World!";
     }
 
+    /** 
+     * アプリケーション実行
+     * @param args 起動時に渡すパラメータ
+     */
     public static void main(String[] args) {
     	ConfigurableApplicationContext context = SpringApplication.run(App.class, args);
-        System.out.println(new App().getGreeting());
-        IntroduceEntity entity = new IntroduceEntity();
-    	Introduce introduce = context.getBean(Introduce.class);
-    	System.out.println(introduce.count() + "件");
-
+    	App app = context.getBean(App.class);
+    	System.out.println(app.getGreeting());
+    	app.init(context);
+    	
+    	//System.setProperty("user.dir", "/src/main/resources");
+    	
+//    	System.setProperty("webdriver.gecko.driver", "C:\\Users\\favor\\build_study\\app\\src\\main\\resources\\driver\\geckodriver.exe");
+//    	
+//    	WebDriver driver = new FirefoxDriver();
+//    	
+//    	driver.get("http://localhost:8080/login");
+    	
+//    	WebElement userName = driver.findElement(By.name("username"));
+//    	userName.sendKeys("サンプル４");
+//
+//    	WebElement password = driver.findElement(By.name("password"));
+//    	password.sendKeys("123");
+//    	
+//    	WebElement loginButton = driver.findElement(By.id("loginBtn"));
+//    	loginButton.click();
     }
     
-    public int tasizan(int param1, int param2) {
-        return param1 + param2;
+    /**
+     * 画面初期化
+     */
+    @Transactional
+    public void init(ConfigurableApplicationContext context) {
+    	
+    	//IntroduceService commew = context.getBean(IntroduceService.class);
+    	
+		//commew.update();
+		//String response = restTemplate.getForObject("http://localhost:8080/find_id", String.class);
+	
+//		ResponseEntity<IntroduceEntity> response2= restTemplate.getForEntity("http://localhost:8080/find_id",IntroduceEntity.class);
+//
+//		
+//		System.out.println("API結果"+ response2.getBody());
+//		
+//		IntroduceEntity introduceEntity = response2.getBody();
+//		System.out.println("API結果2"+ introduceEntity.getName());
+		
+//    	UserForm form = new UserForm();
+//    	form.setName("サンプル");
+//    	form.setPassword("123");
+//
+//    	
+//    	commew.registerUser(form);
+    
+    	//commew.insert("不正登録", "WEBエンジニア", "PHP", "乱入しました", "バックエンドとフロントエンド");
+    	//commew.update();
+    	
     }
+   
 }
