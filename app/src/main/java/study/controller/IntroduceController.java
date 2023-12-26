@@ -9,6 +9,7 @@ import javax.validation.Valid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,17 +32,21 @@ public class IntroduceController {
 	
 	@Autowired
 	private UserService userService;
-	
-	@Value("${upload.directory}")
-	private String uploadDir;
-	
+		
+	@Value("${develop.env}")
+	private String developEnv;
+
+	@Autowired
+	ResourceLoader resourceLoader;
+		
 	@GetMapping("/introduce")
 	public String init(Authentication authentication, Model model) {
-				
+								
 		List<IntroduceEntity> introduces = introduceService.getIntroduces();
 		model.addAttribute("introduces", introduces);
 		model.addAttribute("authentication", authentication);
-				
+		model.addAttribute("developEnv", developEnv);
+					
 		return "introduce/introduce_show";
 	}
 	
@@ -63,14 +68,7 @@ public class IntroduceController {
 		
 		return "introduce/keyword";
 	}
-		
-	@GetMapping("/login")
-	public String login(Authentication authentication, Model model) {
-		model.addAttribute("authentication", authentication);
-		
-		return "login/custom_login";
-	}
-	
+			
 	/**
 	 * 自己紹介変更画面に遷移する
 	 * @param model
@@ -103,7 +101,7 @@ public class IntroduceController {
 			BindingResult bindResult,  
 			Model model,
 			Authentication authentication
-			) {
+			) throws IOException {
 
 		System.out.println("仕事"+ form.getJob());
 		System.out.println("一言メッセージ" + form.getOneMessage());
