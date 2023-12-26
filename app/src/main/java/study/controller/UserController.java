@@ -17,6 +17,13 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 	
+	@GetMapping("/login")
+	public String login(Authentication authentication, Model model) {
+		model.addAttribute("authentication", authentication);
+		
+		return "login/custom_login";
+	}
+	
 	/**
 	 * ユーザ情報変更画面に遷移する
 	 * @param authentication
@@ -63,7 +70,7 @@ public class UserController {
 		
 		model.addAttribute("authentication", authentication);
 		
-		return "top/custom_login";
+		return "login/custom_login";
 	}
 
 }
