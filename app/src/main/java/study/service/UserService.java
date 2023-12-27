@@ -11,6 +11,11 @@ import study.entity.UserEntity;
 import study.repository.IntroduceRepository;
 import study.repository.UserRepository;
 
+/**
+ * ユーザについてのサービスクラス
+ * @author 
+ *
+ */
 @Service
 public class UserService {
 	
@@ -23,7 +28,10 @@ public class UserService {
 	@Autowired
 	private IntroduceRepository introduce;
 
-	
+	/**
+	 * ユーザ情報登録
+	 * @param userForm リクエストのユーザ情報
+	 */
 	@Transactional
 	public void registerUser(UserForm userForm) {
 		UserEntity entity = new UserEntity();
@@ -42,14 +50,20 @@ public class UserService {
 
 		userRepository.save(entity);
 		introduce.save(introduceEntity);
+		
 	}
 	
+	/**
+	 * ユーザ情報更新
+	 * @param userForm リクエストのユーザ情報
+	 * @param username 認証済のユーザ名
+	 */
 	@Transactional
 	public void updateUser(UserForm userForm, String username) {
 		UserEntity entity = userRepository.findByName(username);
-		
+				
 		if (entity == null) {
-			System.out.println("エラーなのでメッセージ表示したい");
+			throw new RuntimeException("ユーザデータないよ");
 		}
 
 		entity.setName(userForm.getName());
@@ -57,6 +71,11 @@ public class UserService {
 	
 	}
 	
+	/**
+	 * ユーザ情報取得
+	 * @param username 認証済ユーザー名
+	 * @return 取得したユーザ情報
+	 */
 	public UserEntity getUser(String username) {
 		return userRepository.findByName(username);
 		
