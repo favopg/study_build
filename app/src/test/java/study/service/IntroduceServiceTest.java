@@ -10,15 +10,21 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Description;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.web.multipart.MultipartFile;
 
+import study.data.UpdateRequestForm;
 import study.entity.IntroduceEntity;
 import study.repository.IntroduceRepository;
 import study.repository.IntroduceSpecifications;
+import study.repository.UserRepository;
 
 /**
  * 自己紹介サービステストクラス
@@ -26,6 +32,7 @@ import study.repository.IntroduceSpecifications;
  *
  */
 @SpringBootTest
+@TestPropertySource(locations = "classpath:application-test.properties")
 class IntroduceServiceTest {
 
 	@Mock
@@ -33,6 +40,28 @@ class IntroduceServiceTest {
 	
 	@InjectMocks
 	IntroduceService introduceService;
+	
+	@Mock
+	UserRepository userRepository;
+	
+	UpdateRequestForm form;
+	String username;
+		
+	@BeforeEach
+	@Description("テストコード実行前の事前準備")
+	void setUp() {
+		
+		// 更新用のリクエストデータ作成
+		byte[] fileContent = "Test file content".getBytes();
+		MockMultipartFile file = new MockMultipartFile("file", "イッシー.jpg", "text/plain", fileContent);
+		form = new UpdateRequestForm();
+		form.setIcon(file);
+		form.setJob("派遣社員");
+		form.setLanguage("Java");
+		form.setMyField("バックエンド");
+		form.setOneMessage("よろしくね");
+		username = "イッシー";
+	}
 		
 	@Test
 	@Description("得意分野作成できる")
@@ -129,6 +158,22 @@ class IntroduceServiceTest {
 		
 		// テスト結果確認
 		assertThat(testData.size(), is(actual.size()));
+	}
+
+	@Test
+	@Description("自己紹介を更新できない(データなしエラー)")
+	void updateTest() throws Exception {
+		// TODO 肝心な機能がmock化しないといけないため、テストコードでやるべきか微妙すぎる
 				
+		when(userRepository.findByName(username)).thenReturn(null);
+				
+		MultipartFile icon = form.getIcon();
+		
+		System.out.println("アイコン" + icon.getName());
+		
+		//introduceService.update(form, username);
+				
+		assertThrows(NullPointerException.class, () -> introduceService.update(form, username));
+		
 	}
 }
