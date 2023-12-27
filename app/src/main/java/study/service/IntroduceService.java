@@ -21,6 +21,11 @@ import study.repository.UserRepository;
 
 /**
  * 自己紹介に関するビジネスロジッククラス
+ * ①：全件検索
+ * ②：ユーザ指定検索
+ * ③：キーワード検索
+ * ④：得意分野のセレクト値作成
+ * ⑤：自己紹介更新
  * @author イッシー
  *
  */
@@ -34,27 +39,55 @@ public class IntroduceService {
 	private UserRepository userRepository;
 	
 	/**
-	 * 画像ファイルアップロードディレクトリ
+	 * 画像ファイルアップロードディレクトリ(本番環境)
 	 */
 	@Value("${upload.directory}")
 	private String uploadDir;
+
+	/**
+	 * 画像ファイルアップロードディレクトリ(ローカル)
+	 */
+	@Value("${upload.directory.local}")
+	private String uploadDirLocal;
+	
+	/**
+	 * 開発環境フラグ
+	 */
+	@Value("${develop.env}")
+	private String isDevelopEnv;
+	
+	/**
+	 * 本番環境フラグ
+	 */
+	private static String IS_PRODUCTION = "1";
+
 	
 	/**
 	 * 自己紹介更新処理
 	 * @param form 自己紹介リクエスト情報
 	 * @param username 認証が通っているユーザ名
+	 * @throws IOException 
 	 */
 	@Transactional(rollbackFor = RuntimeException.class)
 	public void update(UpdateRequestForm form, String username) {
 		
 		MultipartFile iconFile = form.getIcon();
-		Path filePath = Path.of(uploadDir, username +".png");
+		Path filePath;
+		
+		// 開発環境毎でアップロード先を変更する
+		if (IS_PRODUCTION.equals(isDevelopEnv)) {
+			filePath = Path.of(uploadDir, username +".png");
+		} else {
+			filePath = Path.of(uploadDirLocal, username +".png");
+		}
+		
+		System.out.println("アップロードファイルパス" + filePath.toString());
 		
 		try {
 			Files.copy(iconFile.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 		} catch (IOException e) {
 			e.printStackTrace();
-			throw new RuntimeException("ファイルアップロードエラーです。システム屋に問い合わせしてください", e.getCause());
+			throw new RuntimeException("ファイルアップロードエラーです。システム屋に問い合わせしてください" + e.getCause(), e.getCause());
 		}
 				
 		IntroduceEntity entity = userRepository.findByName(username).getIntroduceEntity();
