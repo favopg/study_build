@@ -12,7 +12,6 @@ import study.entity.IntroduceEntity;
  */
 public class IntroduceSpecifications {
 
-	
 	/**
 	 * キーワード検索
 	 * @param oneMessage
@@ -23,9 +22,11 @@ public class IntroduceSpecifications {
 		return (root, query, criteriaBuilder) -> {
 		return criteriaBuilder.or(
 					keyword != null ? criteriaBuilder.like(root.get("oneMessage"), "%"+ keyword + "%") : criteriaBuilder.conjunction(),
-				    keyword != null ? criteriaBuilder.equal(root.get("job"), keyword) : criteriaBuilder.conjunction()
+					keyword != null ? criteriaBuilder.like(root.get("myField"), "%"+ keyword + "%") : criteriaBuilder.conjunction(),
+					keyword != null ? criteriaBuilder.like(root.get("language"), "%"+ keyword + "%") : criteriaBuilder.conjunction(),
+					keyword != null ? criteriaBuilder.like(root.get("job"), "%"+ keyword + "%") : criteriaBuilder.conjunction()
 				);
-		};		
+		};
 	}
 	
 }
