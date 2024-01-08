@@ -1,6 +1,11 @@
 package study.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -20,17 +25,18 @@ public class UserDetailService implements UserDetailsService{
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		
-		System.out.println("UserDetailService：いつ呼ばれているか検証");
-		
+				
 		UserEntity entity = userRepository.findByName(username);
-		
 		
 		if(entity == null) {
 			throw new UsernameNotFoundException("そんなユーザいないよ" + username);
 		}
-				
-		return new UserDetail(entity);
+		
+		// ユーザ毎の権限付与
+		List<GrantedAuthority> roles = new ArrayList<GrantedAuthority>();
+		SimpleGrantedAuthority role = new SimpleGrantedAuthority(entity.getRole());
+		roles.add(role);
+		
+		return new UserDetail(entity, roles);
 	}
-
 }

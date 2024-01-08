@@ -19,54 +19,18 @@
   <thead>
     <tr>
       <th scope="col">#</th>
-      <th scope="col">ユーザ名</th>
+      <th scope="col">登録者</th>
       <th scope="col">コミュニティ名</th>
-      <th scope="col">承認済 / 未承認</th>
       <th scope="col">作成日</th>
-      <th scope="col">承認依頼</th>
     </tr>
   </thead>
   <tbody>
     <tr th:each="communityInfo:${communities}">
       <th scope="row" th:text="${communityInfo.id}"></th>
-      <td th:text="${communityInfo.userEntity.name}"></td>
       <td th:text="${communityInfo.name}"></td>
-      <th:block th:if="${communityInfo.userEntity.isCommunity.equals('1')}">
-	      <td>承認済</td>
-      </th:block>
-      <th:block th:if="${communityInfo.userEntity.isCommunity.equals('0')}">
-	      <td>未承認</td>
-      </th:block>
-      
-      <!--  <td th:else>未承認</td>-->
-      <td th:utext="${#temporals.format(communityInfo.createdAt, 'yyyy年MM月dd日')}"></td>      
-      <th:block th:if="${communityInfo.userEntity.isCommunity.equals('0')}">
-      	<td><a th:href="@{/approve}" class="info">承認</a></td>      
-      </th:block>
-      <th:block th:if="${communityInfo.userEntity.isCommunity.equals('1')}">
-      	<td></td>      
-      </th:block>      
+      <td th:text="${communityInfo.name}"></td>
+      <td th:utext="${#temporals.format(communityInfo.createdAt, 'yyyy年MM月dd日')}"></td>
     </tr>
-    <!--  
-    <tr>
-      <th scope="row">2</th>
-      <td>イッシー分身</td>
-      <td>Commew分身</td>
-      <td>承認済</td>
-      <td>2024年1月6日</td>
-      <td>まだ承認してないよ</td>
-      <td><a href="#" class="info">承認</a></td> 
-    </tr>
-    <tr>
-      <th scope="row">3</th>
-      <td>イッシー分身</td>
-      <td>Commew分身</td>
-      <td>承認済</td>
-      <td>2024年1月6日</td>
-      <td>まだ承認してないよ</td>
-      <td><a href="#" class="info">承認</a></td> 
-    </tr>
-    -->
   </tbody>
 </table>
 

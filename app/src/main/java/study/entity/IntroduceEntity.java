@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -52,7 +53,8 @@ public class IntroduceEntity extends CommonEntity{
 	@JoinColumn(name = "user_id", referencedColumnName = "id", insertable = true, updatable = false)
 	private UserEntity userEntity;
 	
-	@OneToOne(mappedBy = "introduceEntity")
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "community_id", referencedColumnName = "id", insertable = true, updatable = false)	
 	private CommunityEntity communityEntity;
 		
 }

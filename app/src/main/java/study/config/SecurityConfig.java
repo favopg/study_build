@@ -22,6 +22,7 @@ public class SecurityConfig{
 			.authorizeRequests()
 				.antMatchers("/find_id").permitAll()
 				.antMatchers("/introduce").permitAll()
+				.antMatchers("/login/community").permitAll()
 				.antMatchers("/community").hasAuthority("ADMIN")
 				.antMatchers("/user_transition").permitAll()
 				.antMatchers("/user_register").permitAll()

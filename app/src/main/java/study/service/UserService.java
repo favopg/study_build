@@ -43,7 +43,6 @@ public class UserService {
 		UserEntity entity = new UserEntity();
 		entity.setName(userForm.getName());
 		entity.setPassword(passwordEncoder.encode(userForm.getPassword()));
-		entity.setIsCommunity("0");
 		entity.setRole("USERS");
 		
 		// 自己紹介初期登録設定
@@ -62,8 +61,9 @@ public class UserService {
 		// 外部キー制約のために設定する必要あり
 		introduceEntity.setUserEntity(entity);
 		entity.setIntroduceEntity(introduceEntity);
-		communityEntity.setUserEntity(entity);
-		communityEntity.setIntroduceEntity(introduceEntity);
+		introduceEntity.setCommunityEntity(communityEntity);
+		//communityEntity.setUserEntity(entity);
+		//communityEntity.setIntroduceEntity(introduceEntity);
 
 		userRepository.save(entity);
 		introduce.save(introduceEntity);
@@ -75,10 +75,9 @@ public class UserService {
 	 * ユーザ情報更新
 	 * @param userForm リクエストのユーザ情報
 	 * @param username 認証済のユーザ名
-	 * @param isCommunity 1:コミュニティ作成済 0:コミュニティ未作成
 	 */
 	@Transactional
-	public void updateUser(UserForm userForm, String username, String isCommunity) {
+	public void updateUser(UserForm userForm, String username) {
 		UserEntity entity = userRepository.findByName(username);
 				
 		if (entity == null) {
@@ -86,14 +85,8 @@ public class UserService {
 		}
 
 		entity.setName(userForm.getName());
-		entity.setPassword(passwordEncoder.encode(userForm.getPassword()));
-		entity.setIsCommunity(isCommunity);
-		
-		if (userForm.getCommunityName() == null) {
-			entity.setRole("USERS");			
-		} else {
-			entity.setRole("ADMIN");
-		}
+		entity.setPassword(passwordEncoder.encode(userForm.getPassword()));		
+		entity.setRole("USERS");			
 	}
 	
 	/**

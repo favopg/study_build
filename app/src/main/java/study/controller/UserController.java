@@ -47,7 +47,7 @@ public class UserController {
 	public String editUser(@ModelAttribute UserForm userForm, Authentication authentication, Model model) {
 		model.addAttribute("authentication", authentication);
 		
-		userService.updateUser(userForm, authentication.getName(), "0");
+		userService.updateUser(userForm, authentication.getName());
 
 		return "redirect:/login";
 	}

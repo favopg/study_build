@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -43,6 +44,10 @@ public class IntroduceController {
 
 	@Autowired
 	ResourceLoader resourceLoader;
+	
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+
 		
 	@GetMapping("/introduce")
 	public String init(@RequestParam("communityName") String communityName, Authentication authentication, Model model) {
@@ -54,7 +59,7 @@ public class IntroduceController {
 		for(int i= 0; i<communities.size(); i++) {
 			
 			if (communities.get(i).getName().equals(communityName)) {
-				introduces.add(communities.get(i).getIntroduceEntity());
+				//introduces.add(communities.get(i).getIntroduceEntity());
 			}
 		}
 		
@@ -141,16 +146,11 @@ public class IntroduceController {
 			return "login/login_community";
 		}
 		
-		List<CommunityEntity> communities = communityRepository.findAll();
-		List<IntroduceEntity> introduces = new ArrayList<IntroduceEntity>();
-
-		for(int i= 0; i<communities.size(); i++) {
-			if (communities.get(i).getName().equals(communityName)) {
-				introduces.add(communities.get(i).getIntroduceEntity());
-			}
-		}
+		CommunityEntity community = communityRepository.findByName(communityName);
+		List<IntroduceEntity> introduces = community.getIntroduceEntity();
 		
-		//List<IntroduceEntity> introduces = introduceService.getIntroduces();
+		System.out.println("合言葉認証" + passwordEncoder.matches(secret, community.getSecret()));
+				
 		model.addAttribute("introduces", introduces);
 		model.addAttribute("authentication", authentication);
 		model.addAttribute("developEnv", developEnv);
