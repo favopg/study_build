@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>コミュニティ一覧</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+</head>
+<body>
+	<nav th:replace="common/layout :: nav"></nav>
+	<script th:replace="common/layout :: sendLogout"></script>
+
+<!-- ここからコンテンツ  -->
+	<div class="text-center">
+  		<div class="fw-bold">コミュニティ一覧</div>
+  	</div>
+<div class="container">
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">ユーザ名</th>
+      <th scope="col">コミュニティ名</th>
+      <th scope="col">承認済 / 未承認</th>
+      <th scope="col">作成日</th>
+      <th scope="col">承認依頼</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr th:each="communityInfo:${communities}">
+      <th scope="row" th:text="${communityInfo.id}"></th>
+      <td th:text="${communityInfo.userEntity.name}"></td>
+      <td th:text="${communityInfo.name}"></td>
+      <th:block th:if="${communityInfo.userEntity.isCommunity.equals('1')}">
+	      <td>承認済</td>
+      </th:block>
+      <th:block th:if="${communityInfo.userEntity.isCommunity.equals('0')}">
+	      <td>未承認</td>
+      </th:block>
+      
+      <!--  <td th:else>未承認</td>-->
+      <td th:utext="${#temporals.format(communityInfo.createdAt, 'yyyy年MM月dd日')}"></td>      
+      <th:block th:if="${communityInfo.userEntity.isCommunity.equals('0')}">
+      	<td><a th:href="@{/approve}" class="info">承認</a></td>      
+      </th:block>
+      <th:block th:if="${communityInfo.userEntity.isCommunity.equals('1')}">
+      	<td></td>      
+      </th:block>      
+    </tr>
+    <!--  
+    <tr>
+      <th scope="row">2</th>
+      <td>イッシー分身</td>
+      <td>Commew分身</td>
+      <td>承認済</td>
+      <td>2024年1月6日</td>
+      <td>まだ承認してないよ</td>
+      <td><a href="#" class="info">承認</a></td> 
+    </tr>
+    <tr>
+      <th scope="row">3</th>
+      <td>イッシー分身</td>
+      <td>Commew分身</td>
+      <td>承認済</td>
+      <td>2024年1月6日</td>
+      <td>まだ承認してないよ</td>
+      <td><a href="#" class="info">承認</a></td> 
+    </tr>
+    -->
+  </tbody>
+</table>
+
+</div>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script>
+$(document).ready(function() {
+	/**
+    $("#inputText").on("input", function() {
+    	// キーワード検索入力時に非同期通信
+        var inputValue = $(this).val();        
+        $.ajax({
+            url: '/top2',
+            method: 'GET',
+            success: function(response) {
+                console.log(response);
+            },
+            error: function(error) {
+                console.error(error);
+            }
+        });
+    });
+	*/
+});
+</script>
+</body>
+</html>
