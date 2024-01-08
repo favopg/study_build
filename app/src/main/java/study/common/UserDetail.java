@@ -1,6 +1,6 @@
 package study.common;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -15,7 +15,7 @@ import study.entity.UserEntity;
 public class UserDetail extends User {
 
 	
-	public UserDetail(UserEntity userEntity) {
+	public UserDetail(UserEntity userEntity, List<GrantedAuthority> roles) {
 		super(
 				userEntity.getName(), 
 				userEntity.getPassword(), 
@@ -23,7 +23,7 @@ public class UserDetail extends User {
 				true, 
 				true, 
 				true, 
-				new ArrayList<GrantedAuthority>()
+				roles
 		);
 	}
 

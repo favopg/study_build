@@ -20,7 +20,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import study.data.UpdateRequestForm;
+import study.entity.CommunityEntity;
 import study.entity.IntroduceEntity;
+import study.repository.CommunityRepository;
 import study.service.IntroduceService;
 import study.service.UserService;
 
@@ -32,6 +34,9 @@ public class IntroduceController {
 	
 	@Autowired
 	private UserService userService;
+	
+	@Autowired
+	private CommunityRepository communityRepository;
 		
 	@Value("${develop.env}")
 	private String developEnv;
@@ -40,9 +45,20 @@ public class IntroduceController {
 	ResourceLoader resourceLoader;
 		
 	@GetMapping("/introduce")
-	public String init(Authentication authentication, Model model) {
-								
-		List<IntroduceEntity> introduces = introduceService.getIntroduces();
+	public String init(@RequestParam("communityName") String communityName, Authentication authentication, Model model) {
+		
+		
+		List<CommunityEntity> communities = communityRepository.findAll();
+		List<IntroduceEntity> introduces = new ArrayList<IntroduceEntity>();
+
+		for(int i= 0; i<communities.size(); i++) {
+			
+			if (communities.get(i).getName().equals(communityName)) {
+				introduces.add(communities.get(i).getIntroduceEntity());
+			}
+		}
+		
+		//List<IntroduceEntity> introduces = introduceService.getIntroduces();
 		model.addAttribute("introduces", introduces);
 		model.addAttribute("authentication", authentication);
 		model.addAttribute("developEnv", developEnv);
@@ -118,4 +134,28 @@ public class IntroduceController {
 		
 		return "redirect:/introduce";
 	}	
+	
+	@PostMapping("/community/login")
+	public String introduce(@RequestParam("communityName") String communityName, @RequestParam("secret") String secret, Authentication authentication, Model model) {
+		if (communityName == null || secret == null) {
+			return "login/login_community";
+		}
+		
+		List<CommunityEntity> communities = communityRepository.findAll();
+		List<IntroduceEntity> introduces = new ArrayList<IntroduceEntity>();
+
+		for(int i= 0; i<communities.size(); i++) {
+			if (communities.get(i).getName().equals(communityName)) {
+				introduces.add(communities.get(i).getIntroduceEntity());
+			}
+		}
+		
+		//List<IntroduceEntity> introduces = introduceService.getIntroduces();
+		model.addAttribute("introduces", introduces);
+		model.addAttribute("authentication", authentication);
+		model.addAttribute("developEnv", developEnv);
+
+		return "introduce/introduce_show";
+	}
+
 }

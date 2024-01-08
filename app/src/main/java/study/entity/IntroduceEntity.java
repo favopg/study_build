@@ -51,5 +51,8 @@ public class IntroduceEntity extends CommonEntity{
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "user_id", referencedColumnName = "id", insertable = true, updatable = false)
 	private UserEntity userEntity;
+	
+	@OneToOne(mappedBy = "introduceEntity")
+	private CommunityEntity communityEntity;
 		
 }
