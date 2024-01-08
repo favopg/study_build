@@ -49,22 +49,27 @@ public class UserService {
 		IntroduceEntity introduceEntity = new IntroduceEntity();
 		introduceEntity.setJob("サンプル仕事です");
 		introduceEntity.setMyField("サンプル得意分野です");
-		introduceEntity.setIcon("");
+		introduceEntity.setIcon("favopg.png");
 		introduceEntity.setOneMessage("サンプルメッセージです");
 		introduceEntity.setLanguage("サンプル言語です");
 
 		// コミュニティ初期登録設定
-		CommunityEntity communityEntity = new CommunityEntity();
-		communityEntity.setName(userForm.getCommunityName());
-		communityEntity.setSecret(passwordEncoder.encode(userForm.getSecret()));
-
+		CommunityEntity communityEntity;
+		communityEntity = communityRepository.findByName(userForm.getCommunityName());
+		
+		if (communityEntity == null) {
+			communityEntity = new CommunityEntity();
+			communityEntity.setName(userForm.getCommunityName());
+			communityEntity.setSecret(passwordEncoder.encode(userForm.getSecret()));			
+		}
+		
+		
 		// 外部キー制約のために設定する必要あり
 		introduceEntity.setUserEntity(entity);
 		entity.setIntroduceEntity(introduceEntity);
 		introduceEntity.setCommunityEntity(communityEntity);
-		//communityEntity.setUserEntity(entity);
-		//communityEntity.setIntroduceEntity(introduceEntity);
 
+		// ユーザ、自己紹介、コミュニティテーブルに登録
 		userRepository.save(entity);
 		introduce.save(introduceEntity);
 		communityRepository.save(communityEntity);
