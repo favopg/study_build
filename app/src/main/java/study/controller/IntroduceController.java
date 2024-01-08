@@ -142,18 +142,33 @@ public class IntroduceController {
 	
 	@PostMapping("/community/login")
 	public String introduce(@RequestParam("communityName") String communityName, @RequestParam("secret") String secret, Authentication authentication, Model model) {
-		if (communityName == null || secret == null) {
+		if (communityName == null || communityName.equals("") || secret == null || secret.equals("")) {
+			model.addAttribute("communityError", "コミュニティ情報は必須ですよん");
+			model.addAttribute("authentication", authentication);
+
 			return "login/login_community";
 		}
-		
-		CommunityEntity community = communityRepository.findByName(communityName);
-		List<IntroduceEntity> introduces = community.getIntroduceEntity();
-		
-		System.out.println("合言葉認証" + passwordEncoder.matches(secret, community.getSecret()));
 				
+		CommunityEntity community = communityRepository.findByName(communityName);
+		
+		if(community == null) {
+			model.addAttribute("communityError", "コミュニティ情報不整合のため入力内容確認してねん");
+			model.addAttribute("authentication", authentication);
+			return "login/login_community";			
+		}
+		
+		List<IntroduceEntity> introduces = community.getIntroduceEntity();
+				
+		if (!passwordEncoder.matches(secret, community.getSecret())) {
+			model.addAttribute("communityError", "コミュニティ情報をよく確認してください");
+			return "login/login_community";
+		}
+
+		model.addAttribute("communityError", "");
 		model.addAttribute("introduces", introduces);
 		model.addAttribute("authentication", authentication);
 		model.addAttribute("developEnv", developEnv);
+		
 
 		return "introduce/introduce_show";
 	}

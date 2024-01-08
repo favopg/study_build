@@ -28,6 +28,9 @@
                         	    <label for="communityName">合言葉</label>
             					<input type="text" class="form-control" th:name="secret" id="secret" placeholder="所属しているコミュニティ名を入力してください">
                         	</div>
+                        	<div class="text-danger">
+                        		<th:block th:text="${communityError}"></th:block>                        		
+                        	</div>                        	
                         	<button type="submit" id="loginBtn" class="btn btn-primary">コミュニティログイン</button>
                     	</form>
                 	</div>
