@@ -24,9 +24,18 @@
             					<input type="text" class="form-control" th:field="${userForm.name}" id="username" placeholder="ニックネームを入力してください">
                         	</div>
                         	                        	
-                        	<div class="form-group mb-2">
+                        	<div class="form-group mb-1">
                         	    <label for="password">パスワード</label>
             					<input type="password" class="form-control" th:field="${userForm.password}" id="password" placeholder="誰にもばれないパスワードを入力してください">
+                        	</div>
+                        	
+                        	<div class="form-group mb-1">
+                        	    <label for="communityName">コミュニティ名</label>
+            					<input type="text" class="form-control" th:field="${userForm.communityName}" id="communityName" placeholder="新しく作りたい場合のみ入力してください">
+                        	</div>
+                        	<div class="form-group mb-2">
+                        	    <label for="secret">合言葉</label>
+            					<input type="text" class="form-control" th:field="${userForm.secret}" id="secret" placeholder="メンバーに教える合言葉を入力してください">
                         	</div>
                         	
                         	<button type="submit" id="loginBtn" class="btn btn-primary">ユーザ登録</button>
