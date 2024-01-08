@@ -1,15 +1,14 @@
 package study.entity;
 
-import javax.persistence.CascadeType;
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -34,13 +33,8 @@ public class CommunityEntity extends CommonEntity{
 	
 	@Column(name = "secret")
 	private String secret;
-
-	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "user_id", referencedColumnName = "id")
-	private UserEntity userEntity;
 	
-	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "introduce_id", referencedColumnName = "id")
-	private IntroduceEntity introduceEntity;
+	@OneToMany(mappedBy = "communityEntity")
+	private List<IntroduceEntity> introduceEntity;
 
 }
