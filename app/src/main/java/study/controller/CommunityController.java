@@ -3,6 +3,7 @@ package study.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,21 +38,8 @@ public class CommunityController {
 	}
 		
 	@GetMapping("/login/community")
-	public String init() {
-		
+	public String init(Authentication authentication, Model model) {
+		model.addAttribute("authentication", authentication);		
 		return "login/login_community";
-	}
-	
-//	@PostMapping("/community/login")
-//	public String introduce(@RequestParam("communityName") String communityName, @RequestParam("secret") String secret, RedirectAttributes attributes) {
-//		if (communityName == null || secret == null) {
-//			return "login/login_community";
-//		}
-//		
-//		attributes.addAttribute("communityName", communityName);
-//		attributes.addAttribute("secret", secret);
-//				
-//		return "redirect:/introduce";
-//	}
-	
+	}	
 }
