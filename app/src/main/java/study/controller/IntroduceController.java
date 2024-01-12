@@ -4,12 +4,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import study.data.UpdateRequestForm;
 import study.entity.CommunityEntity;
@@ -28,6 +30,7 @@ import study.service.IntroduceService;
 import study.service.UserService;
 
 @Controller
+@SessionAttributes({"communityId", "communityName"})
 public class IntroduceController {
 	
 	@Autowired
@@ -41,29 +44,26 @@ public class IntroduceController {
 		
 	@Value("${develop.env}")
 	private String developEnv;
-
-	@Autowired
-	ResourceLoader resourceLoader;
 	
 	@Autowired
 	private PasswordEncoder passwordEncoder;
-
-		
+	
+	/**
+	 * 自己紹介一覧を表示する
+	 * @param authentication 認証情報
+	 * @param model
+	 * @param session
+	 * @return 自己紹介一覧
+	 */
 	@GetMapping("/introduce")
-	public String init(@RequestParam("communityName") String communityName, Authentication authentication, Model model) {
+	public String show(Authentication authentication, Model model, HttpSession session) {
+						
+		String communityName = (String) session.getAttribute("communityName");
 		
+		CommunityEntity comunityEntity = communityRepository.findByName(communityName);
 		
-		List<CommunityEntity> communities = communityRepository.findAll();
-		List<IntroduceEntity> introduces = new ArrayList<IntroduceEntity>();
-
-		for(int i= 0; i<communities.size(); i++) {
-			
-			if (communities.get(i).getName().equals(communityName)) {
-				//introduces.add(communities.get(i).getIntroduceEntity());
-			}
-		}
+		List<IntroduceEntity> introduces = comunityEntity.getIntroduceEntity();
 		
-		//List<IntroduceEntity> introduces = introduceService.getIntroduces();
 		model.addAttribute("introduces", introduces);
 		model.addAttribute("authentication", authentication);
 		model.addAttribute("developEnv", developEnv);
@@ -72,9 +72,11 @@ public class IntroduceController {
 	}
 	
 	@PostMapping("/keyword")
-	public String searchKeyword(@RequestParam String keyword, Authentication authentication, Model model) {
+	public String searchKeyword(@RequestParam String keyword, Authentication authentication, Model model, HttpSession session) {
+		
+		int communityId = (int) session.getAttribute("communityId");
 				
-		List<IntroduceEntity> keywordIntroduces = introduceService.getKeywordIntroduces(keyword);
+		List<IntroduceEntity> keywordIntroduces = introduceService.getKeywordIntroduces(keyword, communityId);
 		model.addAttribute("introduces", keywordIntroduces);
 		model.addAttribute("authentication", authentication);
 
@@ -121,7 +123,8 @@ public class IntroduceController {
 	public String update(@Valid @ModelAttribute  UpdateRequestForm form,
 			BindingResult bindResult,  
 			Model model,
-			Authentication authentication
+			Authentication authentication,
+			RedirectAttributes redirectData
 			) throws IOException {
 
 		System.out.println("仕事"+ form.getJob());
@@ -141,7 +144,11 @@ public class IntroduceController {
 	}	
 	
 	@PostMapping("/community/login")
-	public String introduce(@RequestParam("communityName") String communityName, @RequestParam("secret") String secret, Authentication authentication, Model model) {
+	public String introduce(@RequestParam("communityName") String communityName, 
+			@RequestParam("secret") String secret, 
+			Authentication authentication, 
+			Model model) {
+		
 		if (communityName == null || communityName.equals("") || secret == null || secret.equals("")) {
 			model.addAttribute("communityError", "コミュニティ情報は必須ですよん");
 			model.addAttribute("authentication", authentication);
@@ -152,11 +159,12 @@ public class IntroduceController {
 		CommunityEntity community = communityRepository.findByName(communityName);
 		
 		if(community == null) {
-			model.addAttribute("communityError", "コミュニティ情報不整合のため入力内容確認してねん");
+			model.addAttribute("communityError", "コミュニティ情報不整合のため入力内容確認してください");
 			model.addAttribute("authentication", authentication);
 			return "login/login_community";			
 		}
 		
+		// コミュニティに紐づいてる自己紹介リストを取得
 		List<IntroduceEntity> introduces = community.getIntroduceEntity();
 				
 		if (!passwordEncoder.matches(secret, community.getSecret())) {
@@ -164,13 +172,13 @@ public class IntroduceController {
 			return "login/login_community";
 		}
 
+		model.addAttribute("communityId", community.getId());
+		model.addAttribute("communityName", communityName);
 		model.addAttribute("communityError", "");
 		model.addAttribute("introduces", introduces);
 		model.addAttribute("authentication", authentication);
 		model.addAttribute("developEnv", developEnv);
 		
-
 		return "introduce/introduce_show";
 	}
-
 }

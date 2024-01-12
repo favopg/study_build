@@ -122,8 +122,8 @@ public class IntroduceService {
 	 * @param keyword キーワード
 	 * @return 自己紹介リスト
 	 */
-	public List<IntroduceEntity> getKeywordIntroduces(String keyword) {	
-		return introduce.findAll(IntroduceSpecifications.findByKeyWord(keyword));
+	public List<IntroduceEntity> getKeywordIntroduces(String keyword, int communityId) {	
+		return introduce.findAll(IntroduceSpecifications.findByKeyWord(keyword, communityId));
 	}
 	
 	/**
