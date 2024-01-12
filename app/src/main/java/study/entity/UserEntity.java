@@ -60,8 +60,4 @@ public class UserEntity {
 	@OneToOne(mappedBy = "userEntity")
 	private IntroduceEntity introduceEntity;
 
-//	@OneToMany(mappedBy = "userEntity")
-//	private List<CommunityEntity> communityEntity;
-
-
 }
