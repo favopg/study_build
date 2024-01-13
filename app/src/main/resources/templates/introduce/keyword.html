@@ -49,8 +49,7 @@
     			<li class="list-group-item" th:text="${introduceInfo.language}"></li>
   			</ul>
   			<div class="card-body" th:if="${authentication.principal.username == introduceInfo.userEntity.name}">
-    			<a th:href="@{/top/{id}(id=${introduceInfo.id})}" class="card-link">編集</a>
-    			<a href="#" class="card-link">削除</a>
+  				<a th:href="@{/introduce/edit/screen}" class="card-link">編集</a>
 	  		</div>
 	   </div>
     </div>    
