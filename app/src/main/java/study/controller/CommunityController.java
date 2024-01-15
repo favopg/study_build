@@ -13,7 +13,7 @@ import study.entity.CommunityEntity;
 import study.service.CommunityService;
 
 @Controller
-@SessionAttributes("communityName")
+@SessionAttributes({"communityName", "authentication"})
 public class CommunityController {
 	
 	@Autowired
