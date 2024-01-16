@@ -9,9 +9,7 @@ public class CustomExceptionHandler {
 	
 	@ExceptionHandler(Exception.class)
 	public String test(Exception ex, Model model) {
-		System.out.println(ex.getMessage());
-		System.out.println(ex.getMessage());
-		
+		System.out.println(ex.getMessage());		
 		return "error/error";
 	}
 

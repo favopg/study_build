@@ -1,10 +1,19 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+
+<title>システムエラー</title>
 </head>
 <body>
-
+	<form th:action="@{/logout}" method="post" name="logout">
+    	<a class="nav-link" href="#" onclick="sendLogout()">お手数ですが、システムエラーなので当テキストをクリックしてログイン画面に戻ってください</a>
+   	</form>
 </body>
+<script th:fragment="sendLogout">
+	function sendLogout() {
+        document.logout.submit();
+    }
+</script>
 </html>
