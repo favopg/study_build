@@ -49,7 +49,7 @@ public class UserService {
 		IntroduceEntity introduceEntity = new IntroduceEntity();
 		introduceEntity.setJob("サンプル仕事です");
 		introduceEntity.setMyField("サンプル得意分野です");
-		introduceEntity.setIcon("favopg.png");
+		introduceEntity.setIcon("default.png");
 		introduceEntity.setOneMessage("サンプルメッセージです");
 		introduceEntity.setLanguage("サンプル言語です");
 
