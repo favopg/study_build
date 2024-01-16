@@ -60,10 +60,12 @@ public class UserController {
 	}
 	
 	@PostMapping("/user_register")
-	public String userRegister(@ModelAttribute UserForm userForm) {
+	public String userRegister(@ModelAttribute UserForm userForm, HttpSession session) {
 		
 		System.out.println("ユーザ名" + userForm.getName());
 		System.out.println("パスワード" + userForm.getPassword());
+		
+		session.setAttribute("userName", userForm.getName());
 
 		userService.registerUser(userForm);
 				
