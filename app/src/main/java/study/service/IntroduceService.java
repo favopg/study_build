@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,25 +71,8 @@ public class IntroduceService {
 	@Transactional(rollbackFor = RuntimeException.class)
 	public void update(UpdateRequestForm form, String username) {
 		
-		MultipartFile iconFile = form.getIcon();
-		Path filePath;
-		
-		// 開発環境毎でアップロード先を変更する
-		if (IS_PRODUCTION.equals(isDevelopEnv)) {
-			filePath = Path.of(uploadDir, username +".png");
-		} else {
-			filePath = Path.of(uploadDirLocal, username +".png");
-		}
-		
-		System.out.println("アップロードファイルパス" + filePath.toString());
-		
-		try {
-			Files.copy(iconFile.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-		} catch (IOException e) {
-			e.printStackTrace();
-			throw new RuntimeException("ファイルアップロードエラーです。システム屋に問い合わせしてください" + e.getCause(), e.getCause());
-		}
-				
+		Path filePath = uploadFile(form.getIcon(), username);
+						
 		IntroduceEntity entity = userRepository.findByName(username).getIntroduceEntity();
 		entity.setJob(form.getJob());
 		entity.setLanguage(form.getLanguage());
@@ -98,6 +81,33 @@ public class IntroduceService {
 		entity.setIcon(filePath.getFileName().toString());
 
 		introduce.flush();
+	}
+	
+	/**
+	 * ファイルアップロード処理を行う
+	 * @param iconFile アイコンファイル
+	 * @param username 認証済のユーザ名
+	 * @return アップロードファイル情報
+	 */
+	private Path uploadFile(MultipartFile iconFile, String username) {
+		
+		Path filePath;
+		
+		// 開発環境毎でアップロード先を変更する
+		if (IS_PRODUCTION.equals(isDevelopEnv)) {
+			filePath = Path.of(uploadDir, username +".png");
+		} else {
+			filePath = Path.of(uploadDirLocal, username +".png");
+		}
+				
+		try {
+			Files.copy(iconFile.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+		} catch (IOException e) {
+			e.printStackTrace();
+			throw new RuntimeException("ファイルアップロードエラーです。システム屋に問い合わせしてください" + e.getCause(), e.getCause());
+		}
+
+		return filePath;
 	}
 	
 	/**
@@ -131,11 +141,6 @@ public class IntroduceService {
 	 * @return 得意分野リスト
 	 */
 	public List<String> getMyFields() {
-		List<String> myFields = new ArrayList<String>();
-		myFields.add("フロントエンド");
-		myFields.add("バックエンド");
-		myFields.add("フロントエンド・バックエンド");
-
-		return myFields;
+		return Arrays.asList("フロントエンド","バックエンド","フロントエンド・バックエンド");
 	}	
 }
