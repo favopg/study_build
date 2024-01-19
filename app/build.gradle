@@ -14,8 +14,13 @@ plugins {
     id 'application'
     id 'org.springframework.boot' version '2.7.17'
     //id 'org.springframework.boot' version '3.1.5'
+    id 'jacoco'
     
     id 'io.spring.dependency-management' version '1.0.10.RELEASE'
+}
+
+jacoco {
+    toolVersion = "0.8.9"
 }
 
 repositories {
@@ -31,10 +36,10 @@ dependencies {
     testImplementation 'org.spockframework:spock-core:2.1-groovy-3.0'
     testImplementation 'org.junit.jupiter:junit-jupiter:5.5.2'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-
+    testImplementation group: 'org.dbunit', name: 'dbunit', version: '2.7.3'
+	
     compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.24'
     annotationProcessor "org.projectlombok:lombok:1.18.24"
-
 
     // This dependency is used by the application.
     implementation 'com.google.guava:guava:31.0.1-jre'
@@ -48,7 +53,7 @@ dependencies {
     implementation group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '2.53.1'
     implementation group: 'io.springfox', name: 'springfox-boot-starter', version: '3.0.0'
 	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-validation', version: '2.7.17'
-    
+	implementation 'org.springframework.boot:spring-boot-starter-logging'
 }
 
 application {
@@ -59,5 +64,15 @@ application {
 tasks.named('test') {
     // Use JUnit Platform for unit tests.
     useJUnitPlatform()
+    finalizedBy jacocoTestReport
 
+}
+
+// カバレッジツール
+jacocoTestReport {
+    reports {
+        xml.required = false
+        csv.required = false
+        html.outputLocation = layout.buildDirectory.dir('jacocoHtml')
+    }
 }
