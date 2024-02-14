@@ -75,6 +75,7 @@ public class IntroduceController {
 		int communityId = (int) session.getAttribute("communityId");				
 		List<IntroduceEntity> keywordIntroduces = introduceService.getKeywordIntroduces(keyword, communityId);
 		model.addAttribute("introduces", keywordIntroduces);
+		model.addAttribute("developEnv", developEnv);
 
 		return "introduce/keyword";
 	}
